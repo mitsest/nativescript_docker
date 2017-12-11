@@ -1,5 +1,7 @@
 ### Nativescript development environment Dockerfile 
 
+![Screenshot](/nativescript_dev_env.png)
+
 This docker container offers an out-of-the-box environment for nativescript development. 
 It includes atom editor, an android emulator alongside a custom avd file (if you want to use another avd.ini and avd_config.ini file you can pass them as argument to the build script), and nativescript dependencies.
 
