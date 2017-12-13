@@ -52,7 +52,9 @@ xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_
 ```
 
 ## Run container
+
 TODO: add entry script
+
 If all went well, you can add the function at your ~/.bashrc or ~/.bash_aliases (replace mAvd variable with the avd name you used)
 
 If you want to run the container with the gpu turned off, you should change
