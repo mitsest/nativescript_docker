@@ -42,7 +42,7 @@ docker build  . -t nativescript_dev_env \
               --build-arg nvidia_driver=$nvidia_driver_version
 ```
 
-I usually run it on Debian Stretch, which uses nvidia-legacy-340xx-driver. So I pass nvidia_driver_version to the build command, driver to install also in the container.
+I usually run it on Debian Stretch, which uses nvidia-legacy-340xx-driver. So I pass nvidia_driver_version to the build command, in order for the containter to be able to make use of the host's gpu.
 
 If you'd rather use the open source drivers you can omit this argument.
 
