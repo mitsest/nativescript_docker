@@ -3,11 +3,11 @@
 This docker container offers an out-of-the-box environment for nativescript development. 
 It includes an atom editor, an android emulator alongside a custom avd file (if you want to use another avd.ini and avd_config.ini file you can pass them as argument to the build script), and nativescript dependencies. It supports live-editing of code
 
-##Requirements
+## Requirements
 Docker
 You host machine should support KVM (run kvm-ok to check)
 
-##Build container
+## Build container
 If you want to use another avd name, or another avd.ini name you should genenerate a new avd.ini file. 
 
 ```bash
