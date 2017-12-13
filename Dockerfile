@@ -29,9 +29,6 @@ ENV QT_XKB_CONFIG_ROOT /usr/share/X11/xkb
 # https://github.com/jamesnetherton/docker-atom-editor/blob/master/Dockerfile
 ENV ATOM_VERSION v1.22.1
 
-# Adding nativescript source to docker image
-ADD $project_folder $project_folder
-
 # Add avd's .ini file
 ADD $avd_ini $ANDROID_AVD_HOME/$avd_ini
 
@@ -135,10 +132,6 @@ RUN apm disable welcome && \
 # Configure git
 RUN  git config --global user.email $git_email && git config --global user.name $git_username
 
-
-# Build nativescript project
-RUN cd $project_folder && tns build android
-
 # Add nvidia drivers if argument was supplied
 RUN if [ "x$nvidia_driver" = "x" ] ; then echo "Skipping installation of nvidia driver" ; else \
     for key in \
@@ -152,6 +145,15 @@ EF0F382A1A7B6500; do \
     apt-get -qq update && \
     apt install -y -qq linux-headers-$(uname -r1.81M|sed 's/[^-]*-[^-]*-//') $nvidia_driver nvidia-xconfig && \
     nvidia-xconfig ; fi
+
+
+# Adding nativescript source to docker image
+# TODO: Maybe also add this as an entry script in case switch between projects is required
+ADD $project_folder $project_folder
+
+
+# Build nativescript project
+RUN cd $project_folder && tns build android
 
 WORKDIR $HOME/$project_folder
 ENTRYPOINT ["/bin/sh", "-c"]

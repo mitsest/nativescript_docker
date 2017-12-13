@@ -3,7 +3,6 @@
 export project_folder=HelloWorld
 export avd_ini=mAvd.ini
 export avd_config_ini=mAvd_config.ini
-export nvidia_driver_version=nvidia-legacy-340xx-driver
 export avd_name=mAvd
 
 
@@ -21,7 +20,6 @@ docker build  . -t nativescript_dev_env \
               --build-arg project_folder=$project_folder \
               --build-arg avd_ini=$avd_ini \
               --build-arg avd_config_ini=$avd_config_ini \
-              --build-arg nvidia_driver=$nvidia_driver_version
 
 xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
 
