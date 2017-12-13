@@ -1,4 +1,4 @@
-### Nativescript development environment Dockerfile 
+# Nativescript development environment dockerfile 
 
 This docker container offers an out-of-the-box environment for nativescript development. 
 It includes an atom editor, an android emulator alongside a custom avd file (if you want to use another avd.ini and avd_config.ini file you can pass them as argument to the build script), and nativescript dependencies. It supports live-editing of code
@@ -51,7 +51,7 @@ When docker finishes building,  don't forget to add the container to xhost
 xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
 ```
 
-##Run container
+## Run container
 TODO: add entry script
 If all went well, you can add the function at your ~/.bashrc or ~/.bash_aliases (replace mAvd variable with the avd name you used)
 
