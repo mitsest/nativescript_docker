@@ -26,7 +26,11 @@ create_avd_ini_file() {
 create_avd_ini_file
 ```
 
-After this step you can build the container
+After this step you can build the container.
+
+Project folder should be at the same level as the Dockerfile. Replace HelloWorld with your project folder's name.
+
+
 ```bash
 export project_folder=HelloWorld
 export avd_ini=mAvd.ini
