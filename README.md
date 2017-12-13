@@ -50,11 +50,6 @@ I usually run it on Debian Stretch, which uses nvidia-legacy-340xx-driver. So I 
 
 If you'd rather use the open source drivers you can omit this argument.
 
-When docker finishes building,  don't forget to add the container to xhost
-```bash
-xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
-```
-
 ## Run container
 
 TODO: add entry script
@@ -71,6 +66,7 @@ to
 
 ```bash
 run_nativescript() {
+	xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
 	avd_name=mAvd
 	docker run --privileged --rm \
 			-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
