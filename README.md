@@ -12,7 +12,7 @@ Your host machine should support KVM (run kvm-ok to check), or the emulator will
 
 ## AVD Configuration (Optional)
 
-If you want to use another avd name(multiple emulators on the same docker image maybe?), or another avd.ini name you should genenerate a new avd.ini file.
+If you want to use another avd name(multiple emulators on the same docker image maybe?), you should genenerate a new avd.ini file.
 
 
 ```bash
@@ -56,21 +56,21 @@ docker build  . -t nativescript_dev_env \
 It should be at the same level as the Dockerfile. Replace HelloWorld with your project folder's name.
 
 ### nvidia_driver
-I usually run it on Debian Stretch, which uses nvidia-legacy-340xx-driver. So I pass nvidia_driver_version to the build command, in order for the containter to be able to make use of the host's gpu.
+I usually run it on Debian Stretch, which uses nvidia-legacy-340xx-driver. So I pass nvidia_driver_version to the build command, in order for the container to be able to make use of the host's gpu.
 
-If you'd rather use the open source drivers you can omit this argument.
+If you'd rather use the open source drivers, or if you 're planning to not use the gpu at all, you can omit this argument.
 
 ### avd configuration
 Replace all other arguments with regards to the avd configuration you need.
 
-If all you want is an API 26 emulator leave those inact.
+If all you want is an API 26 emulator leave those intact.
 
 
 ## Run container
 
 TODO: add entry script
 
-If all went well, you can add the function at your ~/.bashrc or ~/.bash_aliases (replace mAvd variable with the avd name you used)
+If all went well, you can add the following function at your ~/.bashrc or ~/.bash_aliases (replace mAvd variable with the avd name you used)
 
 If you want to run the container with the gpu turned off, you should change
 
@@ -94,8 +94,8 @@ run_nativescript() {
 }
 ```
 
-Now, when you want to run your project all you have to do is issue the command run_nativescript at the console.
+Now, when you want to run your project all you have to do is issue the command run_nativescript at the console. Phew!
 
-Have fun!
+Have fun and let me know if something went wrong!
 
 ![Screenshot](/nativescript_dev_env.png)
