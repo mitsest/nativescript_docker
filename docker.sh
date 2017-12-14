@@ -21,9 +21,9 @@ docker build  . -t nativescript_dev_env \
               --build-arg avd_ini=$avd_ini \
               --build-arg avd_config_ini=$avd_config_ini \
 
-xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
-
 run_nativescript() {
+	xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
+
 	avd_name=mAvd
 	docker run --privileged --rm \
 			-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
