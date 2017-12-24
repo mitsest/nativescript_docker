@@ -12,6 +12,15 @@ Your host machine should support KVM (run kvm-ok to check), or the emulator will
 
 ## AVD Configuration (Optional)
 
+If you want to test your app on another emulator configuration than the one provided inside avd_conf folder, I created the following tool:
+
+https://mitsest.github.io/avd_conf_generator/
+
+It will produce a zip file with the required configuration.
+Extract its contents to avd_conf.
+After that, avd_conf should contain one or more folders (21, 22, 23 etc.) representing SDK versions.
+
+The build script will take care of creating those emulators for you.
 
 ## Build container
 
@@ -23,7 +32,7 @@ docker build  . -t nativescript_dev_env \
               --build-arg project_folder=$project_folder \
               --build-arg nvidia_driver=$nvidia_driver_version \
 							--build-arg git_username="your_git_username" \
-							--build-arg git_email="your_git_email"
+							--build-arg git_email="your@email.com"
 ```
 
 
@@ -37,17 +46,24 @@ If you'd rather use the open source drivers, or if you 're planning to not use t
 
 ## Run container
 
-xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
 
 ```bash
-export avd_name=API_21
+xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
+
+export avd_name=API_26
 docker run --privileged --rm \
 		-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
 		-v /dev/shm:/dev/shm \
 		-e DISPLAY \
 		-t nativescript_dev_env \
-'git pull --rebase & /usr/bin/atom . & cd - && echo No | tns run android --path . --timeout 0 --device '"$avd_name"
+'git pull --rebase & /usr/bin/atom . && echo No | tns run android --path . --timeout 0 --device '"$avd_name"
 ```
+
+Take extra note at the exported variable(avd_name).
+
+If you have used the tool described above to produce your own emulator configuration,
+
+change this to reflect the name you 've chosen.
 
 Have fun and let me know if something went wrong!
 
