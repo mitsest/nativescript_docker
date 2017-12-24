@@ -3,10 +3,7 @@ FROM ubuntu:17.04
 LABEL author="Dimitris Garofalakis<kascrew1@gmail.com>"
 
 # Dockerfile arguments
-ARG avd_ini=mAvd.ini
-ARG avd_name=mAvd
 ARG project_folder=nativescript_src
-ARG avd_config_ini=mAvd_config.ini
 ARG nvidia_driver
 ARG git_username=your_git_username
 ARG git_email="your@email.com"
@@ -22,17 +19,14 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV JAVA_HOME "/usr/lib/jvm/java-8-oracle"
 # Android
 ENV ANDROID_HOME $HOME/sdktools
-ENV ANDROID_AVD_HOME $HOME/.android/avd/
+ENV ANDROID_AVD_HOME $HOME/.android/avd
 ENV PATH ${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:$PATH
 # https://stackoverflow.com/questions/26974644/no-keyboard-input-in-qt-creator-after-update-to-qt5
 ENV QT_XKB_CONFIG_ROOT /usr/share/X11/xkb
 # https://github.com/jamesnetherton/docker-atom-editor/blob/master/Dockerfile
 ENV ATOM_VERSION v1.22.1
 
-# Add avd's .ini file
-ADD $avd_ini $ANDROID_AVD_HOME/$avd_ini
-
-# Create directories required by installers
+# Create directories & files required by installers
 # Run apt update
 RUN mkdir -p $HOME && \
     mkdir -p $HOME/.android && \
@@ -81,38 +75,27 @@ RUN apt-get install -qq -y curl && \
 # Add Java 8 repo  (apt update required afterwards)
 # Auto-accept oracle's license
 # Install Java 8
-RUN add-apt-repository -y ppa:webupd8team/java
-
-RUN apt-get update -qq && \
-    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections && \
-    apt-get install -qq -y --no-install-recommends oracle-java8-installer
-
-# Download and unzip sdktools
-RUN wget -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip && \
-    unzip -qq sdktools.zip -d sdktools && \
-    rm -f sdktools.zip
-
+# Download and unzip android sdktools
 # Accept all Android licenses
-# Download tools for dev on API 26
-RUN yes | sdkmanager --licenses
+# Download tools for targeting API 26
+# Add downloaded libstdc++.so.6 file to /usr/lib (required by emulator)
+RUN add-apt-repository -y ppa:webupd8team/java && \
+    apt-get update -qq && \
+    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections && \
+    apt-get install -qq -y --no-install-recommends oracle-java8-installer && \
+    wget -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip && \
+    unzip -qq sdktools.zip -d sdktools && \
+    rm -f sdktools.zip && \
+    yes | sdkmanager --licenses && \
+    sdkmanager --verbose "tools" "platform-tools" "platforms;android-26" "build-tools;26.0.2" \
+                   "extras;android;m2repository" "extras;google;m2repository" && \
+   ln -sf /usr/lib/libstdc++.so.6  ${ANDROID_HOME}/emulator/lib64/libstdc++/libstdc++.so.6
 
-# Innstall android libraries
-RUN sdkmanager --verbose "tools" "platform-tools" "platforms;android-26" "build-tools;26.0.2" \
-               "extras;android;m2repository" "extras;google;m2repository" "system-images;android-26;google_apis_playstore;x86"
+# Create emulators
+ADD avd_conf avd_conf
+ADD create_emulators.sh create_emulators.sh
+RUN chmod +x create_emulators.sh && ./create_emulators.sh
 
-# Update android libraries
-RUN sdkmanager --verbose --update
-
-# .so file missing (emulator error)
-# Create emulator
-RUN ln -sf /usr/lib/libstdc++.so.6  ${ANDROID_HOME}/emulator/lib64/libstdc++/libstdc++.so.6 && \
-    echo no | avdmanager create avd --force --name $avd_name --package 'system-images;android-26;google_apis_playstore;x86'
-
-# Add avd's config.ini
-ADD $avd_config_ini $ANDROID_AVD_HOME/$avd_name.avd/config.ini
-
-# Install nativescript
-RUN npm install -g nativescript --unsafe-perm
 # Install atom
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
@@ -125,12 +108,10 @@ RUN apt-get clean && \
 # Disable atom welcome screen
 # Install git-plus for atom
 RUN mkdir -p $HOME/.atom
-ADD config.cson $HOME/.atom/config.cson
+ADD atom_config.cson $HOME/.atom/config.cson
 RUN apm disable welcome && \
-    apm install git-plus
-
-# Configure git
-RUN  git config --global user.email $git_email && git config --global user.name $git_username
+    apm install git-plus && \
+    git config --global user.email $git_email && git config --global user.name $git_username
 
 # Add nvidia drivers if argument was supplied
 RUN if [ "x$nvidia_driver" = "x" ] ; then echo "Skipping installation of nvidia driver" ; else \
@@ -148,12 +129,12 @@ EF0F382A1A7B6500; do \
 
 
 # Adding nativescript source to docker image
-# TODO: Maybe also add this as an entry script in case switch between projects is required
+# TODO: Maybe also add this as an entry script in case switch between projects is
 ADD $project_folder $project_folder
 
-
+# Install nativescript
 # Build nativescript project
-RUN cd $project_folder && tns build android
+RUN npm install -g nativescript --unsafe-perm &&  cd $project_folder && tns build android
 
 WORKDIR $HOME/$project_folder
 ENTRYPOINT ["/bin/sh", "-c"]

@@ -83,6 +83,7 @@ to
 ```bash
 run_nativescript() {
 	xhost +local:`docker inspect --format='{{ .Config.Hostname }}' nativescript_dev_env`
+
 	avd_name=mAvd
 	docker run --privileged --rm \
 			-v /tmp/.X11-unix/:/tmp/.X11-unix/ \
@@ -92,6 +93,7 @@ run_nativescript() {
 	'git pull --rebase & /usr/bin/atom . & echo No | tns run android --path . --emulator --timeout 0 & cd $ANDROID_HOME/tools && ./emulator @'"$avd_name"' -gpu on -verbose'
 
 }
+
 ```
 
 Now, when you want to run your project all you have to do is issue the command run_nativescript at the console. Phew!
