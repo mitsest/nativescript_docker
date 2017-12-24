@@ -89,7 +89,7 @@ RUN add-apt-repository -y ppa:webupd8team/java && \
     yes | sdkmanager --licenses && \
     sdkmanager --verbose "tools" "platform-tools" "platforms;android-26" "build-tools;26.0.2" \
                    "extras;android;m2repository" "extras;google;m2repository" && \
-   ln -sf /usr/lib/libstdc++.so.6  ${ANDROID_HOME}/emulator/lib64/libstdc++/libstdc++.so.6
+    ln -sf /usr/lib/libstdc++.so.6  ${ANDROID_HOME}/emulator/lib64/libstdc++/libstdc++.so.6
 
 # Create emulators
 ADD avd_conf avd_conf
@@ -106,11 +106,13 @@ RUN apt-get clean && \
 
 
 # Disable atom welcome screen
-# Install git-plus for atom
+# Install git-plus and terminal emulator for atom
+# Configure git
 RUN mkdir -p $HOME/.atom
 ADD atom_config.cson $HOME/.atom/config.cson
 RUN apm disable welcome && \
     apm install git-plus && \
+    apm install term3 && \
     git config --global user.email $git_email && git config --global user.name $git_username
 
 # Add nvidia drivers if argument was supplied
@@ -129,7 +131,7 @@ EF0F382A1A7B6500; do \
 
 
 # Adding nativescript source to docker image
-# TODO: Maybe also add this as an entry script in case switch between projects is
+# TODO: Maybe also add this as an entry script in case switch between projects is required
 ADD $project_folder $project_folder
 
 # Install nativescript

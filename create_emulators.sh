@@ -6,19 +6,20 @@ yes | sdkmanager --licenses
 
 for folder in avd_conf/*/; do
 		android_version=$(basename $folder)
-		echo "Downloading system image for emulator (android version: $android_version"
+		printf "Downloading system image for emulator (android version: $android_version)\n"
 
 		avd_ini_file=`find "$folder" -name '*.ini' | grep -v 'config.ini'`
 		avd_config_ini_file=`find "$folder" -name 'config.ini'`
 
 		avd_name=$(basename "$avd_ini_file" .ini)
 
-		echo "Creating emulator..."
 		if sdkmanager "system-images;android-$android_version;google_apis_playstore;x86" > /dev/null 2>&1 ; then
+				printf "Creating emulator...\n"
 				echo no | avdmanager create avd --force --name $avd_name --package "system-images;android-$android_version;google_apis_playstore;x86"
 		else
 			printf "$android_version has no system image with bundled playstore. Fallbacking to one without. \n"
 			sdkmanager "system-images;android-$android_version;google_apis;x86"
+			printf "Creating emulator...\n"
 			echo no | avdmanager create avd --force --name $avd_name --package "system-images;android-$android_version;google_apis;x86"
 		fi
 
