@@ -56,7 +56,7 @@ docker run --privileged --rm \
 		-v /dev/shm:/dev/shm \
 		-e DISPLAY \
 		-t nativescript_dev_env \
-'git pull --rebase & /usr/bin/atom . && echo No | tns run android --path . --timeout 0 --device '"$avd_name"
+'git pull --rebase && /usr/bin/atom . && echo No | tns run android --path . --timeout 0 --device '"$avd_name"
 ```
 
 Take extra note at the exported variable(avd_name).
