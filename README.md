@@ -18,7 +18,7 @@ https://mitsest.github.io/avd_conf_generator/
 
 It will produce a zip file with the required configuration.
 Extract its contents to avd_conf.
-After that, avd_conf should contain one or more folders (21, 22, 23 etc.) representing SDK versions.
+After that, avd_conf should contain one or more folders named after the names you picked.
 
 The build script will take care of creating those emulators for you.
 
