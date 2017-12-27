@@ -2,7 +2,7 @@
 
 This docker container offers an out-of-the-box environment for nativescript development.
 It includes an atom editor, an android emulator alongside a custom avd file, and nativescript dependencies.
-It supports live-editing of code through tns.
+It supports live-editing of code through tns cli.
 
 ## Requirements
 
